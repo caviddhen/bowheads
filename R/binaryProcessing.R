@@ -12,11 +12,11 @@
 
 binaryProcessing <- function(att_name="CT", region="Eastern Arctic", season="Summer", output="sums"){
 
-if (att_name %in% c("CT", "SA","FA")){
-a <- readCIS(region = region, season=season)
-b <- rapply(a, binary_func, season=season, att_name=att_name, how="list")
+        if (att_name %in% c("CT", "SA","FA")){
+        a <- readCIS(region = region, season=season)
+        b <- rapply(a, binary_func, season=season, att_name=att_name, how="list")
 
-### Helper function to check and fix slight extent alignment issues
+        ### Helper function to check and fix slight extent alignment issues
 
         t <- b[[1]][[1]] #t is basis extent that all other layers in list will match
                 for (i in 1:length(b)){
@@ -34,37 +34,40 @@ b <- rapply(a, binary_func, season=season, att_name=att_name, how="list")
                     b[[i]][[j]] <- rc
         }}
 
-##make output lists for stacks and summed stacks
+##make output lists for stacks and summed stacks ## SST Data already stacked goes to below
 
-years <- as.character(c(2006:2014))
-years_list <- sapply(years,function(x) NULL)
+        years <- as.character(c(2006:2014))
+        years_list <- sapply(years,function(x) NULL)
 
-years_sums <- paste0(c(2006:2014), "_sums")
-sums_list <- sapply(years_sums,function(x) NULL)
+        years_sums <- paste0(c(2006:2014), "_sums")
+        sums_list <- sapply(years_sums,function(x) NULL)
 
-# do the stack
+   ## do the stack
 
-for(i in 1:length(b)){
-years_list[[i]] <- stack(b[[i]])
-}
-}
-
-#### SST is already in stacks
- if (att_name=="SST"){
-                a <- readSST(region=region, season=season)
-                years_list <- lapply(a, binary_func, season=season, att_name="SST")
+        for(i in 1:length(b)){
+        years_list[[i]] <- stack(b[[i]])
+        }
         }
 
-if (output=="years"){
+#### SST is already in stacks so just read and transform to binary
+         else if (att_name=="SST"){
+               a <- readSST(region=region, season=season)
+               years_list <- lapply(a, binary_func, season=season, att_name="SST")
+         }
+### Return yearly stack or summed
 
-        return(years_list)
+        if (output=="years"){
+
+                return(years_list)
+                }
+
+        else if (output=="sums"){
+
+        for (i in 1:length(sums_list)){
+                sums_list[[i]] <- sum(years_list[[i]])/length(names(years_list[[i]]))
+                }
         }
-else if (output=="sums"){
-        for (i in length(b))
-        sums_list[[i]] <- sum(years_list[[i]])/length(names(years_list[[i]]))
 
-}
-
-
+        return(sums_list)
 
 }
