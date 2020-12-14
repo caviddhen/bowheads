@@ -4,7 +4,7 @@
 #' @param season name to give raster files "Summer" or "Winter"
 #' @param att_name name of ice attribute to analyse CT FA or SA
 #' @param region "Hudson Bay" or "Eastern Arctic"
-#' @param output "years" for list of raster stacks by year or "sums" for sum/average for each year
+#' @param output "stack" for list of raster stacks by year or "sums" for sum/average for each year
 #' @author David Chen
 #' @importFrom  raster raster extent rasterize mask resample crop
 #' @export
@@ -17,22 +17,24 @@ binaryProcessing <- function(att_name="CT", region="Eastern Arctic", season="Sum
         b <- rapply(a, binary_func, season=season, att_name=att_name, how="list")
 
         ### Helper function to check and fix slight extent alignment issues
-
-        t <- b[[1]][[1]] #t is basis extent that all other layers in list will match
+        zz <- b[[1]][[1]] #zz is basis extent that all other layers in list will match
                 for (i in 1:length(b)){
                 for(j in 1:length(b[[i]])) {
-                        e <- extent(t)
+                        e <- extent(zz)
                         r <-b[[i]][[j]]
                         rc <- crop(r, e)
-                   if(sum(as.matrix(extent(rc))!=as.matrix(e)) == 0){
-                        rc <- mask(rc, t)
+                   if(sum(as.matrix(extent(rc))!=as.matrix(e)) == 4){
+                        rc <- mask(rc, zz)
                    }else{
-                        rc <- resample(rc,t)
-                        rc<- mask(rc, t)
+                        rc <- resample(rc,zz)
+                        rc<- mask(rc, zz)
                         }
 
                     b[[i]][[j]] <- rc
-        }}
+                }
+                }
+
+
 
 ##make output lists for stacks and summed stacks ## SST Data already stacked goes to below
 
@@ -47,6 +49,24 @@ binaryProcessing <- function(att_name="CT", region="Eastern Arctic", season="Sum
         for(i in 1:length(b)){
         years_list[[i]] <- stack(b[[i]])
         }
+
+        ### Return yearly stack or summed
+
+        if (output=="stack"){
+
+                return(years_list)
+        }
+
+        else if (output=="sums"){
+
+                for (i in 1:length(sums_list)){
+                        sums_list[[i]] <- sum(years_list[[i]])/length(names(years_list[[i]]))
+                }
+
+
+        return(sums_list)
+        }
+
         }
 
 #### SST is already in stacks so just read and transform to binary
@@ -62,6 +82,9 @@ binaryProcessing <- function(att_name="CT", region="Eastern Arctic", season="Sum
                 }
 
         else if (output=="sums"){
+
+                years_sums <- paste0(c(2006:2014), "_sums")
+                sums_list <- sapply(years_sums,function(x) NULL)
 
         for (i in 1:length(sums_list)){
                 sums_list[[i]] <- sum(years_list[[i]])/length(names(years_list[[i]]))
