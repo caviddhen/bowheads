@@ -20,7 +20,7 @@ readSST <- function(season="Summer", region="Eastern Arctic"){
   files <- list.files(folder)
 
 #make years list to put each year's output
-  years <- as.character(c(2006:2014))
+  years <- as.character(c(1:length(files)+2005)) ## starting year 2006
   years_list <- sapply(years,function(x) NULL)
 
 
@@ -55,8 +55,11 @@ for (i in 1:length(files)){
   }
 
   ## take 7 day averages. Data are exactly 25 weeks in summer and 9 weeks in winter
-  indices <- rep(1:ceiling(length(names(t))/7), each=7)
-  t <-stackApply(t, indices, fun = mean)
+  indices <- rep(1:floor(length(names(t))/7), each=7)
+  if(i %in% seq(3,18, by=4)){ # except for leap years! where simple solution just to make a 8 day week at the end
+    indices <- c(indices, 9)}
+
+  t2 <-stackApply(t, indices, fun = mean)
 
   ## convert from Kelvin to C
   t <- t - 273
@@ -68,9 +71,10 @@ for (i in 1:length(files)){
     cropped = mask(cropped, z)
 
     years_list[[i]] <- cropped
-    }
 
-  #read dummy for extent
+    cat(paste0("read SST ncdf file for year ", (i+2005), "!" ))
+
+    }
 
   return(years_list)
 
