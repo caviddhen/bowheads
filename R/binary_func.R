@@ -50,8 +50,8 @@ binary_func <- function(data, season, att_name){
     else if (att_name == "SA") {
       data$SA <- as.numeric.factor(data$SA)
       data <- data[,(names(data) %in% att_name)]
-      r <- raster(ncol = 1000, nrow = 1000)
-      extent(r) <- extent(data)
+      r<- raster(ext=extent(data))
+      res(r) <- 0.05# create raster
       data_rasterized <- rasterize(data, r, field = data$SA)
 
        if (season == "Summer") {
@@ -79,8 +79,8 @@ binary_func <- function(data, season, att_name){
     else if (att_name == "FA") {
       data$FA <- as.numeric.factor(data$FA)
       data <- data[,(names(data) %in% att_name)]
-      r <- raster(ncol = 1000, nrow = 1000)
-      extent(r) <- extent(data)
+      r<- raster(ext=extent(data))
+      res(r) <- 0.05# create raster
       data_rasterized <- rasterize(data, r, field = data$FA)
 
       if  (season == "Summer") {
@@ -107,11 +107,10 @@ binary_func <- function(data, season, att_name){
 
     ### conditions for SST range
 
-    data[] =  ifelse(data[]>2,0, ifelse(data[] < -0.5,0,1))
+    data[] =  ifelse(data[]>2,0, ifelse(data[] < -0.5,0,1)) ## set the range between -0.5 and 2
   data_rasterized <- data
 
   }
-  stack(data_rasterized)
   return(data_rasterized)
 }
 

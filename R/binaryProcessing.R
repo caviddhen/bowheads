@@ -81,6 +81,7 @@ else if (att_name=="SST"){ #### SST is already in stacks so just read and transf
                                                      "/stack_", tolower(att_name), "_", tolower(season), "_", tolower(reg),
                                                      i+2005),
                             bylayer=FALSE,format="GTiff", overwrite=TRUE)
+
           cat(paste0("stack_", tolower(att_name), "_", tolower(season), "_", tolower(reg),
                      i+2005, " written to file!"))
   }
