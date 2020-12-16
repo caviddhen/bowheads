@@ -8,9 +8,9 @@
 
 matchExtents <- function(data){
 
-zz <- data[[1]] #zz is basis extent that all other layers in list will match
+zz <- data[[1]][[1]] #zz is basis extent that all other layers in list will match
 
-  for(i in 1:length(data)) {
+  for(i in 2:length(data)) {
 
     e <- extent(zz)
     r <-data[[i]]

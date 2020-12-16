@@ -85,7 +85,7 @@ if(write==TRUE){
   writeRaster(data_sum, filename= paste0("data/BASELINE/", region, "/", season, "_", reg,
                                          "_Output/sst/sum_sst_", tolower(season), "_", tolower(reg),
                                     year),
-              bylayer=FALSE,format="GTiff", overwrite=TRUE)
+               format="GTiff", overwrite=TRUE)
 
   cat("Stacks and sums written to file!")
 }

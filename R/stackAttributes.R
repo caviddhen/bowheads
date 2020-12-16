@@ -8,7 +8,7 @@
 #' @importFrom  raster raster extent rasterize mask resample crop
 #' @export
 
-stackAttributes <- function(region="Eastern Arctic", season="Summer", att_name="CT"){
+stackAttributes <- function(region="Eastern Arctic", season="Summer", year = 2006, write=TRUE){
 
   ## names for later writing for rasters
   if (region == "Eastern Arctic") {
@@ -17,37 +17,27 @@ stackAttributes <- function(region="Eastern Arctic", season="Summer", att_name="
 
    ### CURRENTLY ONLY UNTIL 2014 FOR SST
 
-  files <- list.files("data/BASELINE/Hudson Bay/Winter_HB_Output/ct", recursive = TRUE)
+  path <- paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output/")
 
-  years <- as.character(c(1:length(files)+2005))
-  years_list <- sapply(years,function(x) NULL)
+  ct <- stack(paste0(path,"ct/stack_ct_", tolower(season),"_", tolower(reg),year, ".tif"))
+  sa <- stack(paste0(path,"sa/stack_sa_", tolower(season),"_", tolower(reg),year, ".tif"))
+  fa <- stack(paste0(path,"fa/stack_fa_", tolower(season),"_", tolower(reg),year, ".tif"))
+  sst <- stack(paste0(path,"sst/stack_sst_", tolower(season),"_", tolower(reg),year, ".tif"))
 
-  years_sums <- paste0(c(1:length(b)+2005), "_sums")
-  sums_list <- sapply(years_sums,function(x) NULL)
+  sst <- matchExtents(list(ct,sst))[[2]]
+  all <- stack((list(ct,sa,fa,sst)))
 
-for (i in 1:length(years)) {
- ct <- paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output", "/ct/",
-                "stack_ct_", tolower(season), "_", tolower(reg), (i+2005),".tif")
- sa <-  paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output", "/sa/",
-                    "stack_sa_", tolower(season), "_", tolower(reg), (i+2005),".tif")
- fa <-  paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output", "/fa/",
-               "stack_fa_", tolower(season), "_", tolower(reg), (i+2005),".tif")
- sst <-  paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output", "/sst/",
-               "stack_sst_", tolower(season), "_", tolower(reg), (i+2005),".tif")
+  sum_all <- sum(all)
 
- years_list[[i]] <- stack(ct,sa,fa,sst)
- sums_list[[i]] <- sum(years_list[[i]])
+  if (write==TRUE){
+  writeRaster(all, filename=paste0(path, "output_ct_sa_fa_sst/", "stack_ct_sa_fa_sst_", tolower(season), "_", tolower(reg), year),format="GTiff", bylayer=FALSE, overwrite = TRUE)
 
- ## RENAME (in 2 spots) IF INCLUDING ALL 4
-writeRaster(years_list[[i]], filename = paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output", "/output_ct_sa_fa/",
-                                               "stack_ct_sa_fa_", tolower(season), "_", tolower(reg), (i+2005),".tif"),
-                            format="GTiff", overwrite=TRUE)
-writeRaster(sums_list[[i]], filename = paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output", "/output_ct_sa_fa/",
-                                               "stack_ct_sa_fa_", tolower(season), "_", tolower(reg), (i+2005),".tif"),
-            format="GTiff", overwrite=TRUE)
+  writeRaster(sum_all, filename=paste0(path, "output_ct_sa_fa_sst/", "sum_ct_sa_fa_sst_",  tolower(season), "_", tolower(reg), year),format="GTiff", overwrite = TRUE)
+  }
+  cat(paste0("All attributes stacked and summed and written to file for year ", year))
 
-cat(paste0("Year ", i+2005, "all attributes stacked and summed and written to file"))
+  return(sum_all)
 
 }
-}
+
 

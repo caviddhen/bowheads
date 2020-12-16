@@ -38,7 +38,7 @@ if (binary ==TRUE){
       for (att in c("CT", "SA", "FA")){
 
       bin <- lapply(data, binary_func, att_name = att, season = season)
-      bin <- matchExtents(bin) # match tiny differences in exten
+      bin <- matchExtents(bin) # match tiny differences in extents
       bin <- stack(bin)
 
       sum <- sum(bin)/length(names(bin))
@@ -52,7 +52,7 @@ if (binary ==TRUE){
             writeRaster(sum, filename= paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output/", tolower(att),
                                         "/sum_", tolower(att), "_", tolower(season), "_", tolower(reg),
                                        year),
-                        bylayer=FALSE,format="GTiff", overwrite=TRUE)
+                        format="GTiff", overwrite=TRUE)
   }
 
   att_list[[paste0(tolower(att),"_", year)]] <- bin
