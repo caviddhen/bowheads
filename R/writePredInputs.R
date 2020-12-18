@@ -20,7 +20,7 @@ writePredInputs <- function(region="Eastern Arctic", season="Summer", write=TRUE
     seas <- "S"} else {
       seas <- "W" }
 
-stacked_sums <- stackSums(region="Eastern Arctic", season="Summer")
+stacked_sums <- stackSums(region=region, season=season)
 sum_sums <- sum(stacked_sums)
 
 path <- ("data/PREDICTION_II/ts_input/mosaic/")
