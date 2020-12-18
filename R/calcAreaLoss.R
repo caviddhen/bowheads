@@ -52,7 +52,7 @@ print(paste0("future habitat under ", rcp, " in year ", year, " for ", season, "
 print(paste0("Future Habitat is ",round(thick_perc,2), "% of current habitat based on ice thickness."))
 
 
-print(paste0("future habitat under ", rcp, " in year ", year, " for ", season, " will be ", round(both_diff,0), " km2 less based on future Ice Thickness"))
+print(paste0("future habitat under ", rcp, " in year ", year, " for ", season, " will be ", round(both_diff,0), " km2 less based on future both SST and Ice Thickness"))
 print(paste0("Future Habitat is ",round(both_perc,2), "% of current habitat based on both SST and ice thickness."))
 
 
