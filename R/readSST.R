@@ -11,7 +11,7 @@
 
 #' @export
 
-readSST <- function(season="Summer", region="Eastern Arctic", year=2006, binary=TRUE, write=TRUE){
+readSST <- function(season="Summer", region="Eastern Arctic", year, binary=TRUE, write=TRUE){
 
   ## names for later writing for rasters
   if (region == "Eastern Arctic") {

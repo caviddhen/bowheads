@@ -25,7 +25,7 @@ suit_hab_temp <- futuretemp_cropped<maxValue(presenttemp_masked)
 suit_hab_temp <- suit_hab_temp*futuretemp_cropped
 suit_hab_temp <- mask(futuretemp_cropped, suit_hab_temp, maskvalue=0)
 suit_hab_temp <- crop(suit_hab_temp, presenttemp_masked)
-suit_hab_temp <- mask(suit_hab_temp, presenttemp_masked)
+suit_hab_temp <- mask(suit_hab_temp, presenttemp_masked, maskvalue=0)
 #plot(suit_hab_temp)
 
 futurethick_cropped <- raster(paste0(crop_path,"futurethick_",substr(rcp, 4,5),"_", year,"_cropped.tif"))
@@ -45,7 +45,6 @@ thick_m <- suit_hab_thick/suit_hab_thick
 
 suit_hb_both <- temp_m + thick_m
 
-#note opposite for effect for thick?
 writeRaster(suit_hab_temp, filename = paste0(pred_path,"suit_hab_", substr(rcp, 4,5),"_", year, "_temp_", seas), format = "GTiff", overwrite = TRUE)
 writeRaster(suit_hab_thick, filename = paste0(pred_path,"suit_hab_", substr(rcp, 4,5),"_", year, "_thick_", seas), format = "GTiff", overwrite = TRUE)
 writeRaster(suit_hb_both, filename= paste0(pred_path,"suit_hab_", substr(rcp, 4,5),"_", year, "_both_", seas), format = "GTiff", overwrite = TRUE)

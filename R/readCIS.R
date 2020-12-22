@@ -19,7 +19,6 @@ readCIS <- function(region="Hudson Bay", season="Summer", year=2006, binary = TR
           reg <- "HB" }
 
 filepath <- file.path("data", "BASELINE", region, season)
-
 folder <- list.files(filepath, recursive = FALSE, pattern=as.character(year), full.names=TRUE)
 
 files <- list.files(folder, recursive = FALSE, pattern = "\\.shp$", full.names = TRUE)

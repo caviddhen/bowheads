@@ -72,7 +72,7 @@ overall_trend_plot = ggplot() +
   geom_line(data=sum_df, aes(x=year, y=sd/100, group=1, color="SD"))+
   ggtitle("", subtitle = paste0(region,", ", season, " Season")) +
   xlab('Year')+
-  ylab('Trend Statistics')+ylim(0, 1.20) +
+  ylab('Trend Statistics') +
   scale_color_manual(values=c("Mean"="blue", "Max"="green", "Min"="red", "SD"="purple"))+
   labs(color= "Statistical Measures") #, caption="Silja Zimmermann, 2020")
 print(overall_trend_plot)
@@ -81,11 +81,10 @@ ggsave(paste0("data/BASELINE/", region,"/", season, "_", reg,"_Output/overall_tr
 
 # trends of sea ice concentration, sea ice thickness and floe size
 # getting started
-ct_path <- paste0(paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output/ct/"))
-sa_path <- paste0(paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output/sa/"))
-fa_path <- paste0(paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output/fa/"))
-sst_path <- paste0(paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output/sst/"))
-
+ct_path <- paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output/ct/")
+sa_path <- paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output/sa/")
+fa_path <- paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output/fa/")
+sst_path <-paste0("data/BASELINE/", region, "/", season, "_", reg, "_Output/sst/")
 
 ct_list <- list.files(ct_path, full.names = TRUE, pattern = "sum_")
 sa_list <- list.files(sa_path, full.names = TRUE, pattern = "sum_")

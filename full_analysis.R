@@ -1,5 +1,6 @@
 
-###
+### Read in the CIS and SST data, process them to binary,
+    # and then stack all 4 of them into one raster
 regions <- c("Eastern Arctic", "Hudson Bay")
 seasons <- c("Summer", "Winter")
 years <- c(2006:2014)
@@ -11,21 +12,16 @@ for (reg in regions){
 readCIS(region = reg, season = seas, year = year, binary=TRUE, write=TRUE)
 removeTmpFiles(h=0) #remove files in temporary memory after each round
 
-readSST(region = reg, season = seas, year= year, binary=TRUE, write=TRUE )
+readSST(region = reg, season = seas, year= year, binary=TRUE, write=TRUE)
 removeTmpFiles(h=0) #remove files in temporary memory after each round
 
-stackAttributes(region=reg, season=seas, year= 2009, write=TRUE)
+stackAttributes(region=reg, season=seas, year=year, write=TRUE)
 removeTmpFiles(h=0)
           }
   }
 }
 
-
-regions <- c("Eastern Arctic", "Hudson Bay")
-seasons <- c("Summer") # no winter for now
-#seasons <- c("Summer", "Winter")
-
-## TS Analysis
+##### TS Analysis ## Do the time series for variables graphs this not needed if you want to just do the final maps
 for (region in regions){
   for (season in seasons){
 
@@ -33,7 +29,7 @@ tsAnalysis(region=region, season=season)
 }}
 
 
-## Write prediction inputs This is the stacked sums from the CIS and SST analysis SHOULD BE AVERAGE BUT MOSAIC DIVISION BY ITSELF WORKS MAKES THE 0's NA anyways
+## Write prediction inputs ##### This is the stacked sums from the CIS and SST analysis to make the mosaic
 
 for (region in regions){
   for (season in seasons){
@@ -43,7 +39,7 @@ writePredInputs(region=region, season=season, write=TRUE)
   }
   }
 
-## Write mosaic from pred Inputs
+## Make mosaic from pred Inputs
 
 for (season in seasons){
   writeMosaic(season = season, write=TRUE, extend = TRUE)
@@ -58,7 +54,8 @@ for (season in seasons){
   calcBioOracle(year="Present", season=season)
 
       for (year in c(2050, 2100)){
-          for (rcp in rcps){
+
+        for (rcp in rcps){
 
             calcBioOracle(year=year, rcp=rcp, season=season) }
 
@@ -69,8 +66,10 @@ for (season in seasons){
 ### DO SUITABLE HABITAT FUTURE PREDICTION RASTERS
 
 for (season in seasons){
+
   for (year in c(2050,2100)){
-      for (rcp in rcps){
+
+        for (rcp in rcps){
 
         predictFutureHabitat(year=year, rcp =rcp, season=season)
    }}}
@@ -81,7 +80,7 @@ for (season in seasons){
 # this45 <- raster("C:/PIK/bowhead/data/PREDICTION_II/suit_hab_future_env_sep/suit_hab_45_2050_temp.tif")
 # orig45 <- raster("D:/PREDICTION_II/suit_hab_future_env_sep/suit_hab_45_50_temp.tif")
 
-#### ### Get range of suitable temperatures ####
+#### ### Get range of suitable temperatures and Ice Thicknesses ####
 
 files_list <- list.files("data/PREDICTION_II/mask/", full.names = TRUE, pattern=".tif$")
 
@@ -102,12 +101,21 @@ plotFutureEnv(year=year, rcp=rcp, season=season, write=TRUE)
 
 ### Calculate Habitat difference for future scenarios in area and percentage
 
+area_loss <- data.frame()
+
 for (season in seasons){
   for (year in c(2050,2100)){
     for (rcp in rcps){
 
-calcAreaLoss(year=year, rcp=rcp, season=season)
+loss<- calcAreaLoss(year=year, rcp=rcp, season=season)
+
+  area_loss <- rbind(area_loss, loss)
     }}}
+
+
+### save excel of habitat loss
+
+write.csv(area_loss, file=paste0("data/PREDICTION_II/future_habitat_loss.csv"))
 
 
 

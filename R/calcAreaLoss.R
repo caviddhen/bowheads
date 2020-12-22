@@ -43,6 +43,15 @@ thick_perc <- future_area_thick/current_area * 100
 both_diff <- current_area - future_area_both
 both_perc <- future_area_both/current_area * 100
 
+df <- data.frame(row.names = c(paste0(c("SST_", "Ice thickness_", "Both_"), rcp, "_", year)))
+df[1,1] <- temp_diff
+df[1,2] <- temp_perc
+df[2,1] <- thick_diff
+df[2,2] <- thick_perc
+df[3,1] <- both_diff
+df[3,2] <- both_perc
+
+colnames(df) <- c("km2", "percentage of current habitat")
 
 
 print(paste0("future habitat under ", rcp, " in year ", year, " for ", season, " will be ", round(temp_diff,0), " km2 less based on future SST."))
@@ -55,7 +64,7 @@ print(paste0("Future Habitat is ",round(thick_perc,2), "% of current habitat bas
 print(paste0("future habitat under ", rcp, " in year ", year, " for ", season, " will be ", round(both_diff,0), " km2 less based on future both SST and Ice Thickness"))
 print(paste0("Future Habitat is ",round(both_perc,2), "% of current habitat based on both SST and ice thickness."))
 
-
+return(df)
 
 }
 

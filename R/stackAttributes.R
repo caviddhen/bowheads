@@ -24,10 +24,11 @@ stackAttributes <- function(region="Eastern Arctic", season="Summer", year = 200
   fa <- stack(paste0(path,"fa/stack_fa_", tolower(season),"_", tolower(reg),year, ".tif"))
   sst <- stack(paste0(path,"sst/stack_sst_", tolower(season),"_", tolower(reg),year, ".tif"))
 
-  sst <- matchExtents(list(ct,sst))[[2]]
-  all <- stack((list(ct,sa,fa,sst)))
+  all <- stack(matchExtents(list(ct,sa, fa, sst)))
 
-  sum_all <- sum(all)
+  ### THIS IS NOW DIVIDE BY nlayers in the stack, to give a potential maximum of 1...
+
+  sum_all <- sum(all)/length(names(all))
 
   if (write==TRUE){
   writeRaster(all, filename=paste0(path, "output_ct_sa_fa_sst/", "stack_ct_sa_fa_sst_", tolower(season), "_", tolower(reg), year),format="GTiff", bylayer=FALSE, overwrite = TRUE)
