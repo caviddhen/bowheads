@@ -9,7 +9,7 @@
 #' @importFrom  raster raster extent rasterize mask resample crop
 #' @export
 
-writeMosaic <- function(season="Summer", write=TRUE, extend=FALSE){
+writeMosaic <- function(season="Summer", write=TRUE, extend=TRUE){
 
   ## names for writing for rasters
   if (season == "Summer") {
@@ -26,7 +26,8 @@ hb <- raster(paste0(path, "ts_output_hb_", seas, "_stack.tif"))
 if (extend==TRUE){
   ea <- extend(ea, extent(hb), value=NA)
   hb <- extend(hb, extent(ea), value=NA)
-  }
+}
+
 hb <- resample(hb, ea, method="bilinear")
 mosaic_ea <- mosaic(ea, hb, fun=mean)
 mosaic_ea <- mosaic_ea/mosaic_ea

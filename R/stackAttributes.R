@@ -26,8 +26,7 @@ stackAttributes <- function(region="Eastern Arctic", season="Summer", year = 200
 
   all <- stack(matchExtents(list(ct,sa, fa, sst)))
 
-  ### THIS IS NOW DIVIDE BY nlayers in the stack, to give a potential maximum of 1...
-
+  ### THIS IS NOW DIVIDE BY nlayers in the stack, to give a potential maximum of 1...maybe does not give the correct percentage... ####
   sum_all <- sum(all)/length(names(all))
 
   if (write==TRUE){

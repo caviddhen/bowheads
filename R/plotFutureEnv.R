@@ -74,7 +74,6 @@ suit_hab_thick_map <- base_map +
 print(suit_hab_thick_map)
 
 
-
 suit_hab_both_map <- base_map +
   geom_sf(data=world, fill = "antiquewhite1") +
   coord_sf(xlim = c(-115, -50), ylim = c(50,83), expand = FALSE)+
