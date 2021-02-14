@@ -37,7 +37,7 @@ cat(paste0(season, "mosaic raster written"))
 
 
 mosaic_poly<- rasterToPolygons(mosaic_ea, dissolve=T)
-shapefile(mosaic_poly, filename=paste0(path,"mosaic_poly_", tolower(season)), overwrite=TRUE)
+raster::shapefile(mosaic_poly, filename=paste0(path,"mosaic_poly_", tolower(season)), overwrite=TRUE)
 
 cat(paste0(season, "mosaic shp file written"))
 

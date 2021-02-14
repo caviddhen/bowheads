@@ -3,7 +3,7 @@
     # and then stack all 4 of them into one raster
 regions <- c("Eastern Arctic", "Hudson Bay")
 seasons <- c("Summer", "Winter")
-years <- c(2006:2014)
+years <- c(2006:2016)
 
 for (reg in regions){
   for ( seas in seasons){
@@ -47,7 +47,7 @@ for (season in seasons){
 
 ### Process all BioOracle data, read them in, crop, mask the present
 
-rcps <- c("RCP45", "RCP85")
+rcps <- c("RCP26", "RCP45", "RCP85")
 
 for (season in seasons){
 
@@ -73,12 +73,6 @@ for (season in seasons){
 
         predictFutureHabitat(year=year, rcp =rcp, season=season)
    }}}
-#
-# this85 <- raster("C:/PIK/bowhead/data/PREDICTION_II/suit_hab_future_env_sep/suit_hab_85_2100_temp.tif")
-# orig85<- raster("D:/PREDICTION_II/suit_hab_future_env_sep/suit_hab_85_100_temp.tif")
-#
-# this45 <- raster("C:/PIK/bowhead/data/PREDICTION_II/suit_hab_future_env_sep/suit_hab_45_2050_temp.tif")
-# orig45 <- raster("D:/PREDICTION_II/suit_hab_future_env_sep/suit_hab_45_50_temp.tif")
 
 #### ### Get range of suitable temperatures and Ice Thicknesses ####
 
@@ -116,8 +110,3 @@ loss<- calcAreaLoss(year=year, rcp=rcp, season=season)
 ### save excel of habitat loss
 
 write.csv(area_loss, file=paste0("data/PREDICTION_II/future_habitat_loss.csv"))
-
-
-
-
-

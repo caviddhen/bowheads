@@ -26,9 +26,10 @@ readSST <- function(season="Summer", region="Eastern Arctic", year, binary=TRUE,
 
 
   ## Read in dummy mask: use CIS shape file of 2006 for year and season for cropping extent
-  dummy_file <- list.files(file.path("data/BASELINE/", region, season), pattern = "\\.shp$", full.names=T, recursive=T)[1]
+  dummy_file <- list.files(file.path("data/BASELINE", region, season), pattern = "\\.shp$", full.names=T, recursive=T)[1]
   dummy <- readOGR(dummy_file, verbose=F)
   r <- raster(ext=extent(dummy), res=0.05)
+  dummy$CT <- as.factor(dummy$CT)
   dummy <- rasterize(dummy,r, field=dummy$CT)
 
 ## Read each year and subset to season and crop to region selected

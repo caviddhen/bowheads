@@ -27,11 +27,17 @@ future_temp <- raster(paste0(future_path, "suit_hab_", substr(rcp,4,5), "_", yea
 future_thick <- raster(paste0(future_path, "suit_hab_", substr(rcp,4,5), "_", year, "_thick_", seas,".tif"))
 future_both  <- raster(paste0(future_path, "suit_hab_", substr(rcp,4,5), "_", year, "_both_", seas,".tif"))
 
+ext <- extent(future_temp)
+new <- raster(ext=ext, res=0.025)
 
+future_area_temp <- resample(future_temp, new)
 future_area_temp <- sum(tapply(area(future_temp), future_temp[], sum))
-future_area_thick <- sum(tapply(area(future_thick), future_thick[], sum))
-future_area_both <- sum(tapply(area(future_both), future_both[], sum))
 
+future_area_thick <- resample(future_thick, new)
+future_area_thick <- sum(tapply(area(future_thick), future_thick[], sum))
+
+future_area_both <- resample(future_both, new)
+future_area_both <- sum(tapply(area(future_both), future_both[], sum))
 
 temp_diff <- current_area - future_area_temp
 temp_perc <- future_area_temp/current_area * 100

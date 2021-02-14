@@ -20,7 +20,8 @@ binary_func <- function(data, season, att_name){
 
 
     if (att_name == "CT") {
-      data$CT <- as.numeric.factor(data$CT)  # transform factor to numeric
+      #data$CT <- as.numeric.factor(data$CT)  # transform factor to numeric
+      data$CT <- as.numeric(data$CT)
       data <- data[,(names(data) %in% att_name)] # select specific attribute
       r<- raster(ext=extent(data))
       res(r) <- 0.05# create raster
@@ -48,7 +49,8 @@ binary_func <- function(data, season, att_name){
     }
 
     else if (att_name == "SA") {
-      data$SA <- as.numeric.factor(data$SA)
+      #data$SA <- as.numeric.factor(data$SA)
+      data$SA <- as.numeric(data$SA)
       data <- data[,(names(data) %in% att_name)]
       r<- raster(ext=extent(data))
       res(r) <- 0.05# create raster
@@ -77,7 +79,8 @@ binary_func <- function(data, season, att_name){
       }
 
     else if (att_name == "FA") {
-      data$FA <- as.numeric.factor(data$FA)
+      #data$FA <- as.numeric.factor(data$FA)
+      data$FA <- as.numeric(data$FA)
       data <- data[,(names(data) %in% att_name)]
       r<- raster(ext=extent(data))
       res(r) <- 0.05# create raster

@@ -27,14 +27,14 @@ suit_hab_temp <- suit_hab_temp*futuretemp_cropped
 #suit_hab_temp_min <- futuretemp_cropped>minValue(presenttemp_masked)
 suit_hab_temp <- mask(futuretemp_cropped, suit_hab_temp, maskvalue=0)
 suit_hab_temp <- crop(suit_hab_temp, presenttemp_masked)
-suit_hab_temp <- mask(suit_hab_temp, presenttemp_masked, maskvalue=0)
+suit_hab_temp <- mask(suit_hab_temp, presenttemp_masked)
 #plot(suit_hab_temp)
 
 futurethick_cropped <- raster(paste0(crop_path,"futurethick_",substr(rcp, 4,5),"_", year,"_cropped.tif"))
 presentthick_masked <- raster(paste0(mask_path,"presentthick_", tolower(season), "_masked.tif"))
 #include min??
-# suit_hab_thick <- futurethick_cropped<maxValue(presentthick_masked)
-# suit_hab_thick_min <- futuretemp_cropped>minValue(presenttemp_masked)
+suit_hab_thick <- futurethick_cropped<maxValue(presentthick_masked)
+suit_hab_thick_min <- futuretemp_cropped>minValue(presenttemp_masked)
 suit_hab_thick <- suit_hab_thick*futurethick_cropped
 suit_hab_thick <- mask(futurethick_cropped, suit_hab_thick, maskvalue=0)
 suit_hab_thick <- crop(suit_hab_thick, presentthick_masked)
