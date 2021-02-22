@@ -7,7 +7,7 @@
 #' @importFrom  raster raster stack mask crop resample
 #' @export
 
-predictFutureHabitat <- function(year, rcp, season="Summer"){
+predictFutureHabitat <- function(year, rcp, season="Summer", attribute="all"){
 
   ## names for writing for rasters
   if (season == "Summer") {

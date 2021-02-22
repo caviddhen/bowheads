@@ -22,7 +22,7 @@ calcBioOracle <- function(year, rcp=NULL, season="Summer"){
   temp <- raster(paste0(path,year_m, rcp, ".Surface.Temperature.Mean.tif"))
   thick <- raster(paste0(path, year_m, rcp, ".Surface.Ice.thickness.Mean.tif"))
 
-  # crop to mosaic
+  # crop to mosaic ## Here now we crop to original extent?? not done yet
 
   mosaic_path <- "data/PREDICTION_II/ts_input/mosaic/"
   mosaic_r <- stack(paste0(mosaic_path,"mosaic", "_", tolower(season), ".tif"))

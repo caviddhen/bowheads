@@ -4,7 +4,7 @@
 #' @param season name to give raster files "Summer" or "Winter"
 #' @param region "Hudson Bay" or "Eastern Arctic"
 #' @param binary TRUE or FALSE if TRUE this converts using binary_func into binary raster stack. TRUE returns list of stacks by variable
-#' @param writes the raster to file as both stack and sum
+#' @param write the raster to file as both stack and sum
 #' @author David Chen
 #' @importFrom  raster raster extent rasterize
 #' @importFrom ncdf4 nc_open ncvar_get
@@ -26,7 +26,7 @@ files <- list.files(folder, recursive = FALSE, pattern = "\\.shp$", full.names =
     # read original shapefile
 data <- lapply(files, readOGR, verbose=FALSE)
 
-cat("Done reading CIS shp file for ", year, "!")
+cat("Done reading CIS shp file for ", year, " ", region, " ", season, "!")
 
 att_list <- paste0(tolower(c("CT", "SA", "FA")), "_", as.character(year)) ## list of attributes to store
 att_list <- sapply(att_list,function(x) NULL)
@@ -57,7 +57,7 @@ if (binary ==TRUE){
   att_list[[paste0(tolower(att),"_", year)]] <- bin
 }
 
-  cat("Done transforming CIS file into 3 binary raster stacks for CT SA FA ", year, " ", region, "!")
+  cat("Done transforming CIS file into 3 binary raster stacks for CT SA FA ", year, " ", region, " ", season, "!")
  if (write==TRUE){ cat("Written to file!")}
 
 return(att_list)

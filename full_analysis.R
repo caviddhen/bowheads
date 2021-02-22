@@ -1,9 +1,24 @@
+library(rgdal)
+library(raster)
+library(ncdf4)
+library(bowheads)
+library(rgeos)
+setwd("C:/PIK/bowhead") #David's wd
+
 
 ### Read in the CIS and SST data, process them to binary,
-    # and then stack all 4 of them into one raster
+    # and then stack all 4 of them into one raster, this does the aggregation
+  #for the weeks in a given year
 regions <- c("Eastern Arctic", "Hudson Bay")
 seasons <- c("Summer", "Winter")
 years <- c(2006:2016)
+
+years <- c(2007:2008)
+regions <- c("Hudson Bay")
+seasons <- c("Summer", "Winter")
+
+#attributes to include as separate potential habitat maps
+attributes <- c("ct", "sa", "fa", "sst", "all")
 
 for (reg in regions){
   for ( seas in seasons){
@@ -14,6 +29,16 @@ removeTmpFiles(h=0) #remove files in temporary memory after each round
 
 readSST(region = reg, season = seas, year= year, binary=TRUE, write=TRUE)
 removeTmpFiles(h=0) #remove files in temporary memory after each round
+    }
+  }
+  }
+
+
+
+#separate reading and stacking, this does the aggregation for the attributes
+ for (reg in regions){
+    for ( seas in seasons){
+      for(year in years){
 
 stackAttributes(region=reg, season=seas, year=year, write=TRUE)
 removeTmpFiles(h=0)
@@ -21,29 +46,37 @@ removeTmpFiles(h=0)
   }
 }
 
-##### TS Analysis ## Do the time series for variables graphs this not needed if you want to just do the final maps
+##### TS Analysis - not well tested ## Do the time series for variables graphs this not needed if you want to just do the final maps
+# for (region in regions){
+#   for (season in seasons){
+#
+# tsAnalysis(region=region, season=season)
+# }}
+
+
+## Write prediction inputs ##### This is
+# this makes the potential suitable habitat rasters
+#aggregation of all years happens here
+
 for (region in regions){
   for (season in seasons){
+    for (attribute in attributes){
 
-tsAnalysis(region=region, season=season)
-}}
-
-
-## Write prediction inputs ##### This is the stacked sums from the CIS and SST analysis to make the mosaic
-
-for (region in regions){
-  for (season in seasons){
-
-writePredInputs(region=region, season=season, write=TRUE)
+writePredInputs(region=region, season=season, attribute=attribute, write=TRUE)
     removeTmpFiles(h=0)
-  }
-  }
 
+      }
+  }
+}
 ## Make mosaic from pred Inputs
 
 for (season in seasons){
-  writeMosaic(season = season, write=TRUE, extend = TRUE)
+  for (attribute in attributes){
+  writeMosaic(season = season, attribute = attribute, write=TRUE, extend = TRUE)
 }
+}
+
+## 22.02.2021 CURRENTLY new attribute separated analysis goes until here
 
 ### Process all BioOracle data, read them in, crop, mask the present
 

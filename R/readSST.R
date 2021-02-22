@@ -55,7 +55,7 @@ readSST <- function(season="Summer", region="Eastern Arctic", year, binary=TRUE,
 
   ## take 7 day averages. Data are exactly 25 weeks in summer and 9 weeks in winter
   indices <- rep(1:floor(length(names(data))/7), each=7)
-  if(year %in% seq(2008,2012, by=4)){ # except for leap years! where simple solution just to make a 8 day week at the end
+  if(year %in% seq(2008,2012, by=4) && season=="Winter"){ # except for leap years! where simple solution just to make a 8 day week at the end
     indices <- c(indices, indices[length(indices)])}
 
   data <-stackApply(data, indices, fun = mean)
@@ -69,7 +69,7 @@ readSST <- function(season="Summer", region="Eastern Arctic", year, binary=TRUE,
     z = crop(dummy, ex)
     data = mask(data, z)
 
-    cat(paste0("read SST ncdf file for year ", year, "!" ))
+    cat(paste0("read SST ncdf file for year ", year, " ", region, " ", season, "!" ))
 
 if (binary==TRUE){
   data <- binary_func(data, att_name = "SST", season=season)
