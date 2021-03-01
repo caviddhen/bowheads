@@ -42,8 +42,8 @@ stackAttributes <- function(region="Eastern Arctic", season="Summer", year = 200
 
 
 
-   writeRaster(all, filename=paste0(path, "output_ct_sa_fa/", "stack_ct_sa_fa_sst_", tolower(season), "_", tolower(reg), year),format="GTiff", bylayer=FALSE, overwrite = TRUE)
-  writeRaster(sum_all, filename=paste0(path, "output_ct_sa_fa/", "sum_ct_sa_fa_sst_",  tolower(season), "_", tolower(reg), year),format="GTiff", overwrite = TRUE)
+   writeRaster(all, filename=paste0(path, "output_ct_sa_fa_sst/", "stack_ct_sa_fa_sst_", tolower(season), "_", tolower(reg), year),format="GTiff", bylayer=FALSE, overwrite = TRUE)
+  writeRaster(sum_all, filename=paste0(path, "output_ct_sa_fa_sst/", "sum_ct_sa_fa_sst_",  tolower(season), "_", tolower(reg), year),format="GTiff", overwrite = TRUE)
   }
   cat(paste0("All attributes stacked and summed and written to file for year ", year, " ", region, " ", season))
 

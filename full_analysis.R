@@ -3,9 +3,8 @@ library(raster)
 library(ncdf4)
 library(bowheads)
 library(rgeos)
-library(ggplot2)
-library(rnaturalearth)
-setwd("C:/PIK/bowhead") #David's wd
+#setwd("C:/PIK/bowhead") #David's wd
+setwd("C:/Users/silja/iCloudDrive/DAVID/bowhead") #Siljas wd
 
 
 ### Read in the CIS and SST data, process them to binary,
@@ -15,6 +14,9 @@ regions <- c("Eastern Arctic", "Hudson Bay")
 seasons <- c("Summer", "Winter")
 years <- c(2006:2016)
 
+#years <- c(2007:2008)
+#regions <- c("Hudson Bay")
+#seasons <- c("Summer", "Winter")
 
 #attributes to include as separate potential habitat maps
 attributes <- c("ct", "sa", "fa", "sst", "all")
