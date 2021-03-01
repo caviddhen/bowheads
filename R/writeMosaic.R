@@ -14,8 +14,8 @@ writeMosaic <- function(season="Summer", attribute="all", write=TRUE, extend=TRU
 
   ## names for writing for rasters
   if (season == "Summer") {
-    seas <- "S"} else {
-      seas <- "W" }
+    seas <- "s"} else {
+      seas <- "w" }
 
 path <- ("data/PREDICTION_II/ts_input/mosaic/")
 

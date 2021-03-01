@@ -3,6 +3,8 @@ library(raster)
 library(ncdf4)
 library(bowheads)
 library(rgeos)
+library(ggplot2)
+library(rnaturalearth)
 setwd("C:/PIK/bowhead") #David's wd
 
 
@@ -13,9 +15,6 @@ regions <- c("Eastern Arctic", "Hudson Bay")
 seasons <- c("Summer", "Winter")
 years <- c(2006:2016)
 
-years <- c(2007:2008)
-regions <- c("Hudson Bay")
-seasons <- c("Summer", "Winter")
 
 #attributes to include as separate potential habitat maps
 attributes <- c("ct", "sa", "fa", "sst", "all")
@@ -76,16 +75,21 @@ for (season in seasons){
 }
 }
 
-## 22.02.2021 CURRENTLY new attribute separated analysis goes until here
 
 ### Process all BioOracle data, read them in, crop, mask the present
 
 rcps <- c("RCP26", "RCP45", "RCP85")
 
+
 for (season in seasons){
+  for (attribute in attributes){
+  calcBioOracle(year="Present",attribute=attribute, season=season)
+    }
+}
 
-  calcBioOracle(year="Present", season=season)
 
+
+for (season in seasons){
       for (year in c(2050, 2100)){
 
         for (rcp in rcps){
@@ -96,16 +100,6 @@ for (season in seasons){
 }
 
 
-### DO SUITABLE HABITAT FUTURE PREDICTION RASTERS
-
-for (season in seasons){
-
-  for (year in c(2050,2100)){
-
-        for (rcp in rcps){
-
-        predictFutureHabitat(year=year, rcp =rcp, season=season)
-   }}}
 
 #### ### Get range of suitable temperatures and Ice Thicknesses ####
 
@@ -114,17 +108,38 @@ files_list <- list.files("data/PREDICTION_II/mask/", full.names = TRUE, pattern=
 files <- lapply(files_list,raster)
 names(files) <- list.files("data/PREDICTION_II/mask/", pattern=".tif$")
 
-lapply(files, maxValue)
-lapply(files, minValue)
+ranges <- data.frame(row.names=names(files))
+
+
+ranges[,1] <- sapply(files, minValue)
+ranges[,2]<- sapply(files, maxValue)
+
+colnames(ranges) <- c("min","max")
+rownames(ranges) <- gsub("present_", "", rownames(ranges))
+rownames(ranges) <- gsub("_masked.tif", "", rownames(ranges))
+write.csv(ranges, file="suitable_habitat_temperature_and_icethickness.csv")
+
+### DO SUITABLE HABITAT FUTURE PREDICTION RASTERS
+
+for (season in seasons){
+  for (year in c(2050,2100)){
+        for (rcp in rcps){
+          for (attribute in attributes){
+
+        predictFutureHabitat(year=year, attribute=attribute,rcp =rcp, season=season)
+   }}}}
+
 
 ### WRITE PLOTS OF FUTUTRE CHANGE AGAINST CURRENT SUITABLE HABITAT
 
 for (season in seasons){
-  for (year in c(2050,2100)){
+    for (year in c(2050,2100)){
     for (rcp in rcps){
+      for (attribute in attributes){
 
-plotFutureEnv(year=year, rcp=rcp, season=season, write=TRUE)
-    }}}
+plotFutureEnv(year=year, rcp=rcp,attribute=attribute, season=season, write=TRUE)
+    }}}}
+
 
 ### Calculate Habitat difference for future scenarios in area and percentage
 

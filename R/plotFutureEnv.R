@@ -5,6 +5,7 @@
 #' @param rcp "RCP45" or "RCP85"
 #' @param season "Summer" or "Winter
 #' @param write saves plots to file
+#' @param attribute st ca fa sst all
 #' @author David Chen
 #' @importFrom  ggplot2 ggplot
 #' @importFrom  raster as.data.frame
@@ -12,7 +13,7 @@
 #' @importFrom sf st_crop
 #' @export
 
-plotFutureEnv <- function(year, rcp="RCP45", season="Summer", write=TRUE){
+plotFutureEnv <- function(year, rcp="RCP45", season="Summer", attribute="all", write=TRUE){
 
   ## names for writing for rasters
   if (season == "Summer") {
@@ -22,8 +23,8 @@ plotFutureEnv <- function(year, rcp="RCP45", season="Summer", write=TRUE){
   # Base Maps ------------------------------------------------------------
 
   path <- ("data/PREDICTION_II/ts_input/mosaic/")
-  mosaic_summer <- readOGR(paste0(path, "mosaic_poly_summer.shp"))
-  mosaic_winter <- readOGR(paste0(path, "mosaic_poly_winter.shp"))
+  mosaic_summer <- readOGR(paste0(path, "mosaic_poly_summer_", attribute, ".shp"))
+  mosaic_winter <- readOGR(paste0(path, "mosaic_poly_winter_", attribute, ".shp"))
 
   if (season == "Summer"){
     base_map <- ggplot() +
@@ -37,9 +38,9 @@ plotFutureEnv <- function(year, rcp="RCP45", season="Summer", write=TRUE){
 
   path <- "data/PREDICTION_II/suit_hab_future_env_sep/"
 
-  temp <- raster(paste0(path, "suit_hab_", substr(rcp,4,5), "_", year, "_temp_", seas,".tif"))
-  thick <- raster(paste0(path, "suit_hab_", substr(rcp,4,5), "_", year, "_thick_", seas,".tif"))
-  both <-  raster(paste0(path, "suit_hab_", substr(rcp,4,5), "_", year, "_both_", seas,".tif"))
+  temp <- raster(paste0(path, "suit_hab_", substr(rcp,4,5), "_", year, "_",attribute,"_temp_", seas,".tif"))
+  thick <- raster(paste0(path, "suit_hab_", substr(rcp,4,5), "_", year,"_",attribute, "_thick_", seas,".tif"))
+  both <-  raster(paste0(path, "suit_hab_", substr(rcp,4,5), "_", year,"_",attribute, "_both_", seas,".tif"))
 
   temp_df <- raster::as.data.frame(temp, xy=TRUE, na.rm=TRUE)
   thick_df <-raster::as.data.frame(thick, xy=TRUE, na.rm=TRUE)
@@ -67,7 +68,7 @@ suit_hab_temp_map <- base_map +
   labs(fill = "SST (°C)",
        x = "lon",
        y = "lat",
-       title = "", subtitle = paste0(rcp, ": ", year_range, ", ", season)) +
+       title = "", subtitle = paste0(rcp, ": ", year_range, ", ",attribute, ", ", season)) +
   theme_grey(base_size = 9) +
   theme(legend.key.size = unit(0.8,"line"))
 
@@ -83,7 +84,7 @@ suit_hab_thick_map <- base_map +
   labs(fill = "Ice Thickness (m)",
        x = "lon",
        y = "lat",
-       title = "", subtitle = paste0(rcp, ": ", year_range, ", ", season)) +
+       title = "", subtitle = paste0(rcp, ": ", year_range, ", ",attribute, ", ", season)) +
   theme_grey(base_size = 9) +
   theme(legend.key.size = unit(0.8,"line"))
 
@@ -98,7 +99,7 @@ suit_hab_both_map <- base_map +
   labs(fill = "",
        x = "lon",
        y = "lat",
-       title = "", subtitle = paste0(rcp, ": ", year_range, ", ", season)) +
+       title = "", subtitle = paste0(rcp, ": ", year_range, ", ", attribute, ", ",season)) +
   theme_grey(base_size = 9) +
   theme(legend.key.size = unit(0.8,"line"))
 
@@ -106,9 +107,9 @@ print(suit_hab_both_map)
 
 if (write==TRUE){
 plot_path <- "data/PREDICTION_II/plots/"
-ggsave(plot=suit_hab_temp_map,filename = paste0(plot_path,season,"_suit_hab_", substr(rcp,4,5), "_", year, "_Env_temp_", "basemap.png"))
-ggsave(plot=suit_hab_thick_map, filename =paste0(plot_path,season,"_suit_hab_", substr(rcp,4,5), "_", year, "_Env_thick_", "basemap.png"))
-ggsave(plot=suit_hab_both_map, filename =paste0(plot_path,season,"_suit_hab_", substr(rcp,4,5), "_", year, "_Env_both_", "basemap.png"))
+ggsave(plot=suit_hab_temp_map,filename = paste0(plot_path,season,"_suit_hab_", substr(rcp,4,5), "_", year, "_", attribute, "_Env_temp_", "basemap.png"))
+ggsave(plot=suit_hab_thick_map, filename =paste0(plot_path,season,"_suit_hab_", substr(rcp,4,5), "_", year,  "_", attribute, "_Env_thick_", "basemap.png"))
+ggsave(plot=suit_hab_both_map, filename =paste0(plot_path,season,"_suit_hab_", substr(rcp,4,5), "_", year,  "_", attribute,"_Env_both_", "basemap.png"))
 
 }
 }

@@ -16,7 +16,7 @@ stackSums <- function(region, season, attribute){
   if (attribute %in% c("ct", "sa", "fa","sst")){
     attribute = attribute
     pattern = "norm_"} else {
-    attribute="output_ct_sa_fa"
+    attribute="output_ct_sa_fa_sst"
     pattern="sum_"
   }
 

@@ -7,7 +7,7 @@
 #' @importFrom  raster raster stack mask crop resample
 #' @export
 
-calcBioOracle <- function(year, rcp=NULL, season="Summer"){
+calcBioOracle <- function(year, rcp=NULL, season="Summer", attribute="all"){
 
   if (year == 2050 || year == 2100) {
     year_m <- paste0(year,"AOGCM")
@@ -22,13 +22,25 @@ calcBioOracle <- function(year, rcp=NULL, season="Summer"){
   temp <- raster(paste0(path,year_m, rcp, ".Surface.Temperature.Mean.tif"))
   thick <- raster(paste0(path, year_m, rcp, ".Surface.Ice.thickness.Mean.tif"))
 
-  # crop to mosaic ## Here now we crop to original extent?? not done yet
+  # crop to full extent of CIS ## Here now we crop to original extent?? not done yet
 
-  mosaic_path <- "data/PREDICTION_II/ts_input/mosaic/"
-  mosaic_r <- stack(paste0(mosaic_path,"mosaic", "_", tolower(season), ".tif"))
+  dummy_file_ea <- list.files(file.path("data/BASELINE/Eastern Arctic/Winter"), pattern = "\\.shp$", full.names=T, recursive=T)[1]
+  dummy_ea <- readOGR(dummy_file_ea, verbose=F)
+  extent_ea <- extent(dummy_ea)
 
-  temp_cropped <- crop(temp, mosaic_r)
-  thick_cropped <- crop(thick, mosaic_r)
+  dummy_file_hb <- list.files(file.path("data/BASELINE/Hudson Bay/Winter"), pattern = "\\.shp$", full.names=T, recursive=T)[1]
+  dummy_hb <- readOGR(dummy_file_hb, verbose=F)
+  extent_hb <- extent(dummy_hb)
+
+extent <- extent_hb
+  extent[1] <- min(extent_hb[1],extent_ea[1])
+  extent[2] <- max(extent_hb[2],extent_ea[2])
+  extent[3] <- min(extent_hb[3],extent_ea[3])
+  extent[4] <- max(extent_hb[4],extent_ea[4])
+
+
+  temp_cropped <- crop(temp, extent)
+  thick_cropped <- crop(thick, extent)
 
   if (year == 2050 || year == 2100) {
     crop_path <- "data/PREDICTION_II/crop_future_env_sep/"
@@ -40,6 +52,7 @@ calcBioOracle <- function(year, rcp=NULL, season="Summer"){
 
   if(year=="Present"){
   #### Mask
+  mosaic_r <- stack(paste0(mosaic_path,"mosaic", "_", tolower(season),"_",attribute, ".tif"))
 
   mask_path <- "data/PREDICTION_II/mask/"
 
@@ -49,7 +62,7 @@ calcBioOracle <- function(year, rcp=NULL, season="Summer"){
   temp_masked <- mask(temp_cropped, mosaic_r)
   thick_masked <- mask(thick_cropped, mosaic_r)
 
-  writeRaster(temp_masked, filename = paste0(mask_path, tolower(year),"temp_",tolower(season),"_masked"), format = "GTiff", overwrite = TRUE)
-  writeRaster(thick_masked, filename = paste0(mask_path, tolower(year),"thick_",tolower(season),"_masked"), format = "GTiff", overwrite = TRUE)
+  writeRaster(temp_masked, filename = paste0(mask_path, tolower(year),"_",attribute,"_temp_",tolower(season),"_masked"), format = "GTiff", overwrite = TRUE)
+  writeRaster(thick_masked, filename = paste0(mask_path, tolower(year),"_",attribute,"_thick_",tolower(season),"_masked"), format = "GTiff", overwrite = TRUE)
   }
 }
